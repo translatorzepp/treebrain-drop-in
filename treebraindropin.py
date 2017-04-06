@@ -6,20 +6,22 @@ import braintree
 app = Flask(__name__) # create the application instance
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'flaskr.db'),
-    BRAINTREE_MERCHANT_ID='ryqy4yyw7m5bf92h'
-    BRAINTREE_ENVIRONMENT='sandbox'
-    BRAINTREE_PUBLIC_KEY='ymtqgy8773zq2fw3'
-    BRAINTREE_PRIVATE_KEY='7dd7253c4c53d675f15e869212659579'
+    BRAINTREE_MERCHANT_ID='ryqy4yyw7m5bf92h',
+    BRAINTREE_ENVIRONMENT='sandbox',
+    BRAINTREE_PUBLIC_KEY='ymtqgy8773zq2fw3', 
+    BRAINTREE_PRIVATE_KEY='7dd7253c4c53d675f15e869212659579',
 )) #set config environment variables
 
 
 @app.route('/', methods=["GET"])
 def get_client_token():
+    configure_braintree_gateway()
     client_token = braintree.ClientToken.generate()
     return render_template('checkout.html', client_token=client_token)
 
 @app.route('/print_client_token', methods=["GET"])
 def print_client_token():
+    configure_braintree_gateway()
     client_token = braintree.ClientToken.generate()
     return client_token
     # to do: add display of decoded client token
@@ -39,7 +41,18 @@ def store_nonce():
 def show_nonces():
     db = get_db()
     query = db.execute('select pk, nonce, time from nonces order by time asc')
+    all_nonces = query.fetchall()
+    return all_nonces
+    #return render_template('show_nonces.html', nonce_table=all_nonces)
 
+
+def configure_braintree_gateway():
+    braintree.Configuration.configure(
+        BRAINTREE_ENVIRONMENT,
+        merchant_id=BRAINTREE_MERCHANT_ID,
+        public_key=BRAINTREE_PUBLIC_KEY,
+        private_key=BRAINTREE_PRIVATE_KEY
+    )
 
 # Database stuff
 def connect_db():
