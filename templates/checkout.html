@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+  <script src='https://js.braintreegateway.com/web/dropin/1.0.0-beta.6/js/dropin.min.js'></script>
+  <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
+</head>
+
+<body>
+
+  <div id='drop-in-container'>
+  </div>
+
+  <button id='submitter'>Submit Drop-in</button>
+
+  <script>
+
+    function postbackNonce(nonceFromPayload) {
+      jQuery.post(
+          '/nonce_received/',
+          { nonce: nonceFromPayload }
+      );
+    }
+
+    braintree.dropin.create({
+      authorization: '{{ client_token }}',
+      selector: '#drop-in-container'
+    }, function (error, dropInInstance) {
+
+      //dropin has been created (or there's been an error)
+      if (error) {
+        console.error(error);
+        return;
+      }
+      document.querySelector('#submitter').addEventListener('click', function () {
+        dropInInstance.requestPaymentMethod(function (tokenizationErr, payload) {
+          if (error) {
+            console.error(error);
+            return;
+          }
+          console.log(payload.nonce);
+          postbackNonce(payload.nonce);
+        });
+      });
+
+    });
+
+  </script>
+
+</body>
+
+</html>
