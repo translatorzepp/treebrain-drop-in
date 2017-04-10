@@ -35,9 +35,10 @@ def store_nonce():
     db = get_db()
     db.execute('insert into nonces (nonce) values (?)', [nonce])
     db.commit()
-    return nonce
+    #return nonce
     # to do: add real display of nonce / more stuff
-    # return render_template('nonce_received.html', nonce=nonce)
+    # ??? return render_template('nonce_received.html', nonce=nonce)
+    return redirect(url_for('/past_nonces/'))
 
 @app.route('/past_nonces/')
 def show_nonces():

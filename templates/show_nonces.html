@@ -4,4 +4,12 @@
 <body>
   <h1>New Drop-in Nonces</h1>
 
+		<ul class=entries>
+			{% for entry in entries %}
+				<li><p>{{ entry.nonce|safe }} : {{ entry.timestamp|safe }}</p>
+			{% else %}
+				<li><em>No nonces have been tokenized.</em>
+			{% endfor %}
+		</ul>
+
 </body>
