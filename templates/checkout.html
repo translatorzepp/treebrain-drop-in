@@ -16,7 +16,7 @@
 
     function postbackNonce(nonceFromPayload) {
       jQuery.post(
-          '/nonce_received/',
+          '/store_nonce/',
           { nonce: nonceFromPayload }
       );
     }

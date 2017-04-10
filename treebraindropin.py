@@ -20,14 +20,6 @@ def get_client_token():
     client_token = braintree.ClientToken.generate()
     return render_template('checkout.html', client_token=client_token)
 
-@app.route('/print_client_token/', methods=['GET'])
-def print_client_token():
-    configure_braintree_gateway()
-    client_token = braintree.ClientToken.generate()
-    return client_token
-    # to do: add display of decoded client token
-    # return render_template('client_token.html', client_token=client_token)
-
 @app.route('/store_nonce/', methods=['POST'])
 def store_nonce():
     nonce = request.form['nonce']
@@ -38,17 +30,25 @@ def store_nonce():
     #return nonce
     # to do: add real display of nonce / more stuff
     # ??? return render_template('nonce_received.html', nonce=nonce)
-    return redirect(url_for('/show_nonces/'))
+    return redirect(url_for('show_nonces'))
 
 @app.route('/show_nonces/')
 def show_nonces():
     db = get_db()
-    query = db.execute('select id, nonce, time from nonces order by time asc')
+    query = db.execute('select id, nonce, time from nonces order by time desc')
     #query = db.execute('select id from nonces')
     all_nonces = query.fetchall()
-    #app.logger.info('all_nonces: %s', all_nonces)
+    app.logger.info('all_nonces: %s', all_nonces)
     #return all_nonces
     return render_template('show_nonces.html', nonce_table=all_nonces)
+
+@app.route('/print_client_token/', methods=['GET'])
+def print_client_token():
+    configure_braintree_gateway()
+    client_token = braintree.ClientToken.generate()
+    return client_token
+    # to do: add display of decoded client token
+    # return render_template('client_token.html', client_token=client_token)
 
 
 def configure_braintree_gateway():

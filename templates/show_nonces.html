@@ -1,15 +1,44 @@
 <!doctype html>
-<title>New Drop-in Nonces</title>
+<title>Show Nonces</title>
+
+</head>
+  <!-- to do: use https://github.braintreeps.com/braintree/synapse instead! -->
+	<style type="text/css">
+		table {
+			border-spacing: 30px;
+			border-collapse: collapse;
+		}
+		h1, th, td {
+			padding: 15px;
+			border: 1px solid grey;
+			font-family: Courier;
+		}
+	</style>
+</head>
 
 <body>
-  <h1>New Drop-in Nonces</h1>
+  <h1>Nonces created with the New Drop-in</h1>
 
-		<ul class=entries>
-			{% for entry in entries %}
-				<li><p>{{ entry.nonce|safe }} : {{ entry.timestamp|safe }}</p>
+		<!--
+    <ul class=nonce_list>
+			{% for entry in nonce_table %}
+				<li><p>{{ entry.nonce|safe }} : {{ entry.time|safe }}</p>
 			{% else %}
 				<li><em>No nonces have been tokenized.</em>
 			{% endfor %}
 		</ul>
+    -->
+   <table>
+  	<tr>
+  	  <th>Nonce String</th>
+  	  <th>Creation Timestamp</th>
+  	</tr>
+		{% for entry in nonce_table %}
+			<tr><td>{{ entry.nonce|safe }}</td> <td>{{ entry.time|safe }}</td></tr>
+		{% else %}
+			<em>No nonces have been tokenized.</em>
+		{% endfor %}
+
+</table>
 
 </body>
