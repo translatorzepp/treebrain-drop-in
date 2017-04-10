@@ -28,7 +28,7 @@ def print_client_token():
     # to do: add display of decoded client token
     # return render_template('client_token.html', client_token=client_token)
 
-@app.route('/nonce_received/', methods=['POST'])
+@app.route('/store_nonce/', methods=['POST'])
 def store_nonce():
     nonce = request.form['nonce']
     app.logger.info('Nonce: %s', nonce)
@@ -38,9 +38,9 @@ def store_nonce():
     #return nonce
     # to do: add real display of nonce / more stuff
     # ??? return render_template('nonce_received.html', nonce=nonce)
-    return redirect(url_for('/past_nonces/'))
+    return redirect(url_for('/show_nonces/'))
 
-@app.route('/past_nonces/')
+@app.route('/show_nonces/')
 def show_nonces():
     db = get_db()
     query = db.execute('select id, nonce, time from nonces order by time asc')
