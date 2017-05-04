@@ -6,7 +6,7 @@ import braintree
 app = Flask(__name__) # create the application instance
 app.config.from_object(__name__)
 app.config.update(dict(
-    DATABASE=os.path.join(app.root_path, 'treebraindropin.db'),
+    DATABASE=os.path.join(app.root_path, 'databasetreebraindropin.db'),
     BRAINTREE_MERCHANT_ID='ryqy4yyw7m5bf92h',
     BRAINTREE_ENVIRONMENT='sandbox',
     BRAINTREE_PUBLIC_KEY='ymtqgy8773zq2fw3', 
@@ -27,19 +27,14 @@ def store_nonce():
     db = get_db()
     db.execute('insert into nonces (nonce) values (?)', [nonce])
     db.commit()
-    #return nonce
-    # to do: add real display of nonce / more stuff
-    # ??? return render_template('nonce_received.html', nonce=nonce)
-    return redirect(url_for('show_nonces'))
+    return url_for('show_nonces')
 
 @app.route('/show_nonces/')
 def show_nonces():
     db = get_db()
     query = db.execute('select id, nonce, time from nonces order by time desc')
-    #query = db.execute('select id from nonces')
     all_nonces = query.fetchall()
     app.logger.info('all_nonces: %s', all_nonces)
-    #return all_nonces
     return render_template('show_nonces.html', nonce_table=all_nonces)
 
 @app.route('/print_client_token/', methods=['GET'])

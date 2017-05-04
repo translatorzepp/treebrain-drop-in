@@ -17,7 +17,10 @@
     function postbackNonce(nonceFromPayload) {
       jQuery.post(
           '/store_nonce/',
-          { nonce: nonceFromPayload }
+          { nonce: nonceFromPayload },
+          function (redirectUrl, status, xhr) {
+            window.location = redirectUrl
+          }
       );
     }
 
