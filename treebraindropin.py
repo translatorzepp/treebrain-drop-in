@@ -23,6 +23,7 @@ def get_client_token():
 @app.route('/store_nonce/', methods=['POST'])
 def store_nonce():
     nonce = request.form['nonce']
+    nonce_type = request.form['payment_method_type']
     app.logger.info('Nonce: %s', nonce)
     db = get_db()
     db.execute('insert into nonces (nonce) values (?)', [nonce])
