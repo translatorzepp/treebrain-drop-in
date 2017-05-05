@@ -24,16 +24,16 @@ def get_client_token():
 def store_nonce():
     nonce = request.form['nonce']
     nonce_type = request.form['payment_method_type']
-    app.logger.info('Nonce: %s', nonce)
+    app.logger.info('Nonce: {0}, Payment Instrument Type: {1}'.format(nonce, nonce_type))
     db = get_db()
-    db.execute('insert into nonces (nonce) values (?)', [nonce])
+    db.execute('insert into nonces (nonce, payment_instrument_type) values (?, ?)', [nonce, nonce_type])
     db.commit()
     return url_for('show_nonces')
 
 @app.route('/show_nonces/')
 def show_nonces():
     db = get_db()
-    query = db.execute('select id, nonce, time from nonces order by time desc')
+    query = db.execute('select nonce, time, payment_instrument_type from nonces order by time desc')
     all_nonces = query.fetchall()
     app.logger.info('all_nonces: %s', all_nonces)
     return render_template('show_nonces.html', nonce_table=all_nonces)

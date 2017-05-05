@@ -22,13 +22,13 @@
    <table>
   	<tr>
   	  <th>Nonce String</th>
-  	  <!-- <th>Type</th> -->
+  	  <th>Type</th>
   	  <th>Creation Timestamp</th>
   	</tr>
 		{% for entry in nonce_table %}
 			<tr>
         <td>{{ entry.nonce|safe }}</td>
-        <!-- <td>{{ entry.payment_instrument_type }}</td></tr> -->
+        <td>{{ entry.payment_instrument_type|safe }}</td>
         <td>{{ entry.time|safe }}</td>
       </tr>
 		{% else %}
