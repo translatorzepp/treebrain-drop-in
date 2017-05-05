@@ -35,7 +35,7 @@ def show_nonces():
     db = get_db()
     query = db.execute('select nonce, time, payment_instrument_type from nonces order by time desc')
     all_nonces = query.fetchall()
-    app.logger.info('all_nonces: %s', all_nonces)
+    app.logger.info('all_nonces: {0}'.format(all_nonces))
     return render_template('show_nonces.html', nonce_table=all_nonces)
 
 @app.route('/print_client_token/', methods=['GET'])
@@ -72,7 +72,7 @@ def get_db():
     """
     if not hasattr(g, 'sqlite_db'):
         g.sqlite_db = connect_db()
-        app.logger.info('%s', g.sqlite_db)
+        app.logger.info('got db: {0}'.format(g.sqlite_db))
     return g.sqlite_db
 
 @app.teardown_appcontext
