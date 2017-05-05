@@ -19,22 +19,18 @@
 <body>
   <h1>Nonces created with the New Drop-in</h1>
 
-		<!--
-    <ul class=nonce_list>
-			{% for entry in nonce_table %}
-				<li><p>{{ entry.nonce|safe }} : {{ entry.time|safe }}</p>
-			{% else %}
-				<li><em>No nonces have been tokenized.</em>
-			{% endfor %}
-		</ul>
-    -->
    <table>
   	<tr>
   	  <th>Nonce String</th>
+  	  <!-- <th>Type</th> -->
   	  <th>Creation Timestamp</th>
   	</tr>
 		{% for entry in nonce_table %}
-			<tr><td>{{ entry.nonce|safe }}</td> <td>{{ entry.time|safe }}</td></tr>
+			<tr>
+        <td>{{ entry.nonce|safe }}</td>
+        <!-- <td>{{ entry.payment_instrument_type }}</td></tr> -->
+        <td>{{ entry.time|safe }}</td>
+      </tr>
 		{% else %}
 			<em>No nonces have been tokenized.</em>
 		{% endfor %}

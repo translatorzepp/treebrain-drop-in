@@ -14,10 +14,13 @@
 
   <script>
 
-    function postbackNonce(nonceFromPayload) {
+    function postbackNonce(payload) {
       jQuery.post(
           '/store_nonce/',
-          { nonce: nonceFromPayload },
+          {
+            nonce: payload.nonce,
+            payment_method_type: payload.type
+          },
           function (redirectUrl, status, xhr) {
             window.location = redirectUrl
           }
@@ -26,7 +29,12 @@
 
     braintree.dropin.create({
       authorization: '{{ client_token }}',
-      selector: '#drop-in-container'
+      selector: '#drop-in-container',
+      //locale: 'es_ES',
+      paypal: {
+        flow: 'vault'
+      },
+      paymentOptionPriority: ['paypal', 'card']
     }, function (error, dropInInstance) {
 
       //dropin has been created (or there's been an error)
@@ -40,8 +48,8 @@
             console.error(error);
             return;
           }
-          console.log(payload.nonce);
-          postbackNonce(payload.nonce);
+          console.log('full payload:', payload, 'details:', payload.details);
+          postbackNonce(payload);
         });
       });
 
