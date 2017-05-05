@@ -29,7 +29,12 @@
 
     braintree.dropin.create({
       authorization: '{{ client_token }}',
-      selector: '#drop-in-container'
+      selector: '#drop-in-container',
+      //locale: 'es_ES',
+      paypal: {
+        flow: 'vault'
+      },
+      paymentOptionPriority: ['paypal', 'card']
     }, function (error, dropInInstance) {
 
       //dropin has been created (or there's been an error)
