@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-  <script src='https://js.braintreegateway.com/web/dropin/1.0.0-beta.6/js/dropin.min.js'></script>
+  <script src='https://js.braintreegateway.com/web/dropin/1.0.0/js/dropin.min.js'></script>
   <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
 </head>
 
@@ -10,16 +10,17 @@
   <div id='drop-in-container'>
   </div>
 
-  <button id='submitter'>Submit Drop-in</button>
+  <button id='tokenizer'>Submit Drop-in</button>
+  <button id='continuer' disabled=true>Continue</button>
 
   <script>
 
-    function postbackNonce(payload) {
+    function postbackNonce(tokenizedPayload) {
       jQuery.post(
           '/store_nonce/',
           {
-            nonce: payload.nonce,
-            payment_method_type: payload.type
+            nonce: tokenizedPayload.nonce,
+            payment_method_type: tokenizedPayload.type
           },
           function (redirectUrl, status, xhr) {
             window.location = redirectUrl
@@ -27,7 +28,11 @@
       );
     }
 
+    var submitter = document.querySelector('#tokenizer');
+    var continuer = document.querySelector('#continuer');
+
     braintree.dropin.create({
+
       authorization: '{{ client_token }}',
       selector: '#drop-in-container',
       //locale: 'es_ES',
@@ -35,6 +40,7 @@
         flow: 'vault'
       },
       paymentOptionPriority: ['paypal', 'card']
+
     }, function (error, dropInInstance) {
 
       //dropin has been created (or there's been an error)
@@ -42,14 +48,22 @@
         console.error(error);
         return;
       }
-      document.querySelector('#submitter').addEventListener('click', function () {
+
+      submitter.addEventListener('click', function () {
         dropInInstance.requestPaymentMethod(function (tokenizationErr, payload) {
-          if (error) {
-            console.error(error);
+
+          if (tokenizationErr) {
+            console.error(tokenizationErr);
             return;
           }
+
           console.log('full payload:', payload, 'details:', payload.details);
-          postbackNonce(payload);
+          continuer.addEventListener('click', function () {
+            postbackNonce(payload);
+          });
+          document.querySelector('#continuer').disabled = false;
+          document.querySelector('#tokenizer').disabled = true;
+
         });
       });
 
