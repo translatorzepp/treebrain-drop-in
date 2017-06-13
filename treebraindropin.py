@@ -17,7 +17,9 @@ app.config.update(dict(
 @app.route('/', methods=['GET'])
 def get_client_token():
     configure_braintree_gateway()
-    client_token = braintree.ClientToken.generate()
+    client_token = braintree.ClientToken.generate({
+            'customer_id': 'krystal', 
+            })
     return render_template('checkout.html', client_token=client_token)
 
 @app.route('/store_nonce/', methods=['POST'])
@@ -84,7 +86,8 @@ def close_db(error):
 
 if __name__ == '__main__':
     app.run(
-        host='127.0.0.1',
+        #host='127.0.0.1',
+        host='0.0.0.0',
         port=5000,
         debug=True,
     )
